@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>داشبورد قیمت</title>
+<style>
+  @font-face{
+    font-family: 'VazirMatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-matn-font@v27.2.2/dist/Vazir-Matn-Regular.woff2') format('woff2');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face{
+    font-family: 'VazirMatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-matn-font@v27.2.2/dist/Vazir-Matn-Medium.woff2') format('woff2');
+    font-weight: 500; font-display: swap;
+  }
+  @font-face{
+    font-family: 'VazirMatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-matn-font@v27.2.2/dist/Vazir-Matn-Bold.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face{
+    font-family: 'VazirMatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-matn-font@v27.2.2/dist/Vazir-Matn-ExtraBold.woff2') format('woff2');
+    font-weight: 800; font-display: swap;
+  }
+  :root{
+    --bar-bg: #ffffff;
+    --icon-color: #9a9aa1;
+    --text-color: #8b8b92;
+    --page-bg: #ededee;
+    --up-color: #1faa59;
+    --down-color: #e0473f;
+    --card-bg: #ffffff;
+    --title-color: #1c1c1e;
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  button{ outline: none; -webkit-tap-highlight-color: transparent; }
+  button:focus, button:focus-visible{ outline: none; }
+  html, body{
+    margin: 0; padding: 0; width: 100%; min-height: 100%;
+    background: var(--page-bg);
+    font-family: 'VazirMatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  }
+  body{ position: relative; }
+
+  /* ===== Top bar ===== */
+  .top-wrapper{
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20;
+    padding: max(16px, env(safe-area-inset-top, 16px)) 20px 12px;
+    background: linear-gradient(to bottom, rgba(237,237,238,1) 70%, rgba(237,237,238,0));
+    pointer-events: none;
+  }
+  .dashboard-title{
+    font-size: 17px; font-weight: 700; color: var(--title-color);
+    letter-spacing: 0.01em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    opacity: 0.85;
+  }
+
+  /* ===== Bottom search bar ===== */
+  .bottom-wrapper{
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 20px max(20px, env(safe-area-inset-bottom, 20px));
+    background: linear-gradient(to top, rgba(237,237,238,1) 60%, rgba(237,237,238,0));
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.35s ease;
+    transform: translateY(0); opacity: 1;
+  }
+  .bottom-wrapper.hidden-bar{ transform: translateY(100%); opacity: 0; pointer-events: none; }
+  .search-bar{
+    width: 70%; min-width: 200px; max-width: 380px; height: 50px;
+    background: var(--bar-bg); border-radius: 25px;
+    display: flex; align-items: center; gap: 10px; padding: 0 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    transition: box-shadow 0.25s ease, transform 0.15s cubic-bezier(0.22,1,0.36,1);
+    cursor: text; will-change: transform;
+  }
+  .search-bar:active{ transform: scale(0.94); }
+  .search-bar.focused{
+    transform: scale(1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .search-bar.pressing{ transform: scale(0.94) !important; }
+  .search-icon{ flex: 0 0 auto; width: 19px; height: 19px; display: flex; align-items: center; justify-content: center; color: var(--icon-color); }
+  .search-icon svg{ width: 100%; height: 100%; display: block; }
+  .search-input{
+    flex: 1 1 auto; border: none; outline: none; background: transparent;
+    font-size: 16px; font-weight: 600; color: #3c3c43; caret-color: #3c3c43;
+    width: 100%; height: 100%;
+    font-family: 'VazirMatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  }
+  [dir="rtl"] .search-input{ direction: rtl; text-align: right; }
+  [dir="ltr"] .search-input{ direction: ltr; text-align: left; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .search-input::placeholder{ color: var(--text-color); font-weight: 600; opacity: 1; }
+
+  @media (min-width: 768px){
+    .search-bar{ height: 52px; border-radius: 26px; padding: 0 22px; max-width: 420px; }
+    .search-input{ font-size: 17px; }
+    .search-icon{ width: 21px; height: 21px; }
+  }
+  @media (max-width: 380px){
+    .search-bar{ height: 46px; padding: 0 16px; gap: 8px; width: 80%; }
+    .search-input{ font-size: 15px; }
+  }
+
+  /* ===== Page ===== */
+  .page{
+    padding-top: 80px; padding-bottom: 100px;
+    max-width: 720px; margin: 0 auto;
+    padding-left: 16px; padding-right: 16px;
+  }
+  @media (min-width: 1200px){
+    .page{ padding-top: 90px; }
+    .top-wrapper{ padding-top: 28px; }
+  }
+
+  .section-label{
+    font-size: 13px; font-weight: 700; color: var(--text-color);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    margin: 18px 4px 10px;
+  }
+  [dir="ltr"] .section-label{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.06em;
+  }
+
+  .grid{
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  }
+  @media (min-width: 560px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
+
+  /* ===== CARD ===== */
+  .card{
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 14px 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(0,0,0,0.05);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    display: flex; flex-direction: column; gap: 6px;
+    min-height: 84px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card.hidden{ display: none; }
+  .card.no-price{ display: none; }
+
+  /* ===== پس‌زمینه پرچم / رنگ ===== */
+  .card-bg{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  /* پرچم واقعی با object-fit */
+  .card-bg-flag-img{
+    position: absolute;
+    inset: -20px;
+    width: calc(100% + 40px);
+    height: calc(100% + 40px);
+    object-fit: cover;
+    object-position: center;
+    filter: blur(14px) saturate(2.4) brightness(0.95) contrast(1.15);
+    opacity: 1;
+    display: block;
+  }
+  /* div fallback برای CSS gradient */
+  .card-bg-flag{
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  /* لایه solid color برای طلا/نقره/crypto */
+  .card-bg-solid{
+    position: absolute;
+    inset: 0;
+    opacity: 0.38;
+  }
+  /* overlay سفید برای خوانایی متن */
+  .card-bg-overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.26);
+    backdrop-filter: blur(2px);
+  }
+
+  /* محتوای کارت بالای bg */
+  .card-top, .card-price, .card-unit{ position: relative; z-index: 1; }
+
+  .card-top{
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  }
+  .card-name{
+    font-size: 13px; font-weight: 700; color: var(--title-color); line-height: 1.3;
+  }
+  [dir="ltr"] .card-name{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+  .card-badge{
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 8px;
+    white-space: nowrap; flex-shrink: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .badge-up{ color: var(--up-color); background: rgba(31,170,89,0.12); }
+  .badge-down{ color: var(--down-color); background: rgba(224,71,63,0.12); }
+  .badge-flat{ color: var(--text-color); background: rgba(138,138,142,0.10); }
+
+  .card-price{
+    font-size: 18px; font-weight: 800; color: var(--title-color);
+    letter-spacing: -0.01em; direction: ltr; text-align: right; unicode-bidi: plaintext;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  [dir="ltr"] .card-price{ text-align: left; }
+
+  .card-unit{
+    font-size: 11px; color: var(--text-color); font-weight: 600;
+  }
+  [dir="ltr"] .card-unit{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+  .empty-state{ text-align: center; color: var(--text-color); font-size: 14px; font-weight: 600; padding: 40px 10px; }
+
+  .status-bar{ text-align: center; font-size: 12px; color: var(--text-color); font-weight: 600; margin: 4px 0; }
+  [dir="ltr"] .status-bar{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .status-dot{
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: #cfcfd2; margin-left: 6px; transition: background 0.3s ease;
+  }
+  .status-dot.live{
+    background: var(--up-color);
+    box-shadow: 0 0 0 0 rgba(31,170,89,0.5);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(31,170,89,0.4); }
+    70%{ box-shadow: 0 0 0 6px rgba(31,170,89,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(31,170,89,0); }
+  }
+
+  /* ===== Overlay screens ===== */
+  .overlay-screen{
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--page-bg);
+    transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .overlay-screen.hidden-overlay{ opacity: 0; pointer-events: none; transform: scale(1.04); }
+
+  #langScreen{ gap: 36px; }
+  .lang-icon{ font-size: 38px; line-height: 1; opacity: 0.7; }
+  .lang-headline{ font-size: 15px; font-weight: 600; color: var(--text-color); letter-spacing: 0.02em; text-align: center; }
+  .lang-buttons{ display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 280px; padding: 0 24px; }
+  .lang-btn{
+    width: 100%; height: 56px; border: none; border-radius: 18px; font-size: 17px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--card-bg); color: var(--title-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.1s cubic-bezier(0.4,0,0.6,1), box-shadow 0.1s ease;
+    will-change: transform;
+    font-family: 'VazirMatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lang-btn:active{ transform: scale(0.95); }
+  .lang-btn-flag{ font-size: 22px; line-height: 1; }
+
+  #introScreen{ gap: 0; }
+  .intro-content{
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.34,1.2,0.64,1);
+  }
+  .intro-content.visible{ opacity: 1; transform: translateY(0); }
+  .intro-logo{
+    width: 64px; height: 64px; border-radius: 20px; background: var(--title-color);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.13); margin-bottom: 8px;
+  }
+  .intro-logo svg{ width: 34px; height: 34px; color: #fff; }
+  .intro-welcome{ font-size: 13px; font-weight: 600; color: var(--text-color); letter-spacing: 0.06em; text-transform: uppercase; }
+  .intro-title{
+    font-size: 26px; font-weight: 800; color: var(--title-color);
+    letter-spacing: -0.01em; text-align: center; line-height: 1.2;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .intro-title.fa{ font-family: 'VazirMatn', Tahoma, sans-serif; font-size: 24px; }
+</style>
+</head>
+<body>
+
+  <div class="overlay-screen" id="langScreen">
+    <div class="lang-icon">🌐</div>
+    <div class="lang-headline">Choose your language / زبان خود را انتخاب کنید</div>
+    <div class="lang-buttons">
+      <button class="lang-btn" id="btnFa"><span class="lang-btn-flag">🇮🇷</span>فارسی</button>
+      <button class="lang-btn" id="btnEn"><span class="lang-btn-flag">🇺🇸</span>English</button>
+    </div>
+  </div>
+
+  <div class="overlay-screen hidden-overlay" id="introScreen">
+    <div class="intro-content" id="introContent">
+      <div class="intro-logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <polyline points="2 14 7 9 11 13 16 7 22 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="2" y1="20" x2="22" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="intro-welcome" id="introWelcome">Welcome</div>
+      <div class="intro-title" id="introTitle">Price Dashboard</div>
+    </div>
+  </div>
+
+  <div id="mainApp">
+    <div class="top-wrapper">
+      <span class="dashboard-title" id="dashboardTitle">Price Dashboard</span>
+    </div>
+    <div class="page">
+      <div class="status-bar" id="statusBar">--<span class="status-dot" id="statusDot"></span></div>
+      <div id="priceGrid"></div>
+      <div class="empty-state" id="emptyState" style="display:none;"></div>
+    </div>
+    <div class="bottom-wrapper" id="bottomWrapper">
+      <div class="search-bar" id="searchBar">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/>
+            <line x1="16.4" y1="16.4" x2="21" y2="21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <input type="text" class="search-input" id="searchInput" placeholder="جست‌وجو"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+
+  /* ===================== CARD BACKGROUNDS ===================== */
+  var CARD_BG = {
+    // ارزهای فیات — گرادیان CSS رنگ‌های اصلی پرچم
+    usd:  { type:'flag', code:'us', css:'linear-gradient(180deg,#B22234 14%,#fff 14%,#fff 28%,#B22234 28%,#B22234 43%,#fff 43%,#fff 57%,#B22234 57%,#B22234 71%,#fff 71%,#fff 86%,#B22234 86%)' },
+    eur:  { type:'flag', code:'eu', css:'linear-gradient(180deg,#003399 33%,#FFCC00 33%,#FFCC00 66%,#003399 66%)' },
+    gbp:  { type:'flag', code:'gb', css:'linear-gradient(135deg,#012169 0%,#C8102E 50%,#012169 100%)' },
+    aed:  { type:'flag', code:'ae', css:'linear-gradient(180deg,#00732F 33%,#fff 33%,#fff 67%,#000 67%)' },
+    try:  { type:'flag', code:'tr', css:'radial-gradient(circle at 45% 50%,#fff 20%,#E30A17 20%)' },
+    cny:  { type:'flag', code:'cn', css:'linear-gradient(180deg,#DE2910 0%,#DE2910 100%)' },
+    jpy:  { type:'flag', code:'jp', css:'radial-gradient(circle at 50% 50%,#BC002D 30%,#fff 30%)' },
+    cad:  { type:'flag', code:'ca', css:'linear-gradient(90deg,#FF0000 25%,#fff 25%,#fff 75%,#FF0000 75%)' },
+    aud:  { type:'flag', code:'au', css:'linear-gradient(135deg,#00008B 60%,#FF0000 60%)' },
+    chf:  { type:'flag', code:'ch', css:'linear-gradient(90deg,#FF0000 38%,#fff 38%,#fff 62%,#FF0000 62%)' },
+    sar:  { type:'flag', code:'sa', css:'linear-gradient(180deg,#006C35 0%,#006C35 85%,#fff 85%)' },
+    rub:  { type:'flag', code:'ru', css:'linear-gradient(180deg,#fff 33%,#0039A6 33%,#0039A6 67%,#D52B1E 67%)' },
+    inr:  { type:'flag', code:'in', css:'linear-gradient(180deg,#FF9933 33%,#fff 33%,#fff 67%,#138808 67%)' },
+    afn:  { type:'flag', code:'af', css:'linear-gradient(90deg,#000 33%,#C00 33%,#C00 67%,#008000 67%)' },
+    iqd:  { type:'flag', code:'iq', css:'linear-gradient(180deg,#CE1126 33%,#fff 33%,#fff 67%,#000 67%)' },
+    syp:  { type:'flag', code:'sy', css:'linear-gradient(180deg,#CE1126 33%,#fff 33%,#fff 67%,#000 67%)' },
+    kwd:  { type:'flag', code:'kw', css:'linear-gradient(180deg,#007A3D 33%,#fff 33%,#fff 67%,#CE1126 67%)' },
+    bhd:  { type:'flag', code:'bh', css:'linear-gradient(90deg,#CE1126 50%,#fff 50%)' },
+    omr:  { type:'flag', code:'om', css:'linear-gradient(180deg,#DB161B 33%,#fff 33%,#fff 67%,#1C6F38 67%)' },
+    qar:  { type:'flag', code:'qa', css:'linear-gradient(90deg,#8D1B3D 55%,#fff 55%)' },
+    hkd:  { type:'flag', code:'hk', css:'radial-gradient(circle at 40% 50%,#fff 22%,#DE2910 22%)' },
+    sgd:  { type:'flag', code:'sg', css:'linear-gradient(180deg,#EF3340 50%,#fff 50%)' },
+    nzd:  { type:'flag', code:'nz', css:'linear-gradient(180deg,#00247D 50%,#CC142B 50%)' },
+    sek:  { type:'flag', code:'se', css:'linear-gradient(180deg,#006AA7 38%,#FECC00 38%,#FECC00 55%,#006AA7 55%)' },
+    nok:  { type:'flag', code:'no', css:'linear-gradient(180deg,#EF2B2D 38%,#fff 38%,#fff 45%,#002868 45%,#002868 55%,#fff 55%,#fff 62%,#EF2B2D 62%)' },
+    dkk:  { type:'flag', code:'dk', css:'linear-gradient(180deg,#C60C30 42%,#fff 42%,#fff 58%,#C60C30 58%)' },
+    myr:  { type:'flag', code:'my', css:'linear-gradient(180deg,#CC0001 14%,#fff 14%,#fff 28%,#CC0001 28%,#CC0001 43%,#fff 43%,#fff 57%,#CC0001 57%,#CC0001 71%,#fff 71%,#fff 86%,#CC0001 86%)' },
+    krw:  { type:'flag', code:'kr', css:'radial-gradient(circle at 50% 50%,#C60C30 30%,#fff 30%)' },
+    thb:  { type:'flag', code:'th', css:'linear-gradient(180deg,#A51931 17%,#fff 17%,#fff 33%,#2D2A4A 33%,#2D2A4A 67%,#fff 67%,#fff 83%,#A51931 83%)' },
+    pln:  { type:'flag', code:'pl', css:'linear-gradient(180deg,#fff 50%,#DC143C 50%)' },
+    czk:  { type:'flag', code:'cz', css:'linear-gradient(135deg,#11457E 50%,#D7141A 50%)' },
+    huf:  { type:'flag', code:'hu', css:'linear-gradient(180deg,#CE2939 33%,#fff 33%,#fff 67%,#477050 67%)' },
+    brl:  { type:'flag', code:'br', css:'linear-gradient(135deg,#009C3B 40%,#FEDF00 40%,#FEDF00 60%,#009C3B 60%)' },
+    mxn:  { type:'flag', code:'mx', css:'linear-gradient(90deg,#006847 33%,#fff 33%,#fff 67%,#CE1126 67%)' },
+    zar:  { type:'flag', code:'za', css:'linear-gradient(135deg,#007A4D 33%,#FFB612 33%,#FFB612 67%,#002395 67%)' },
+    pkr:  { type:'flag', code:'pk', css:'linear-gradient(90deg,#fff 25%,#01411C 25%)' },
+    idr:  { type:'flag', code:'id', css:'linear-gradient(180deg,#CE1126 50%,#fff 50%)' },
+    // طلا — گرادیان طلایی
+    g18:       { type:'solid', color:'linear-gradient(135deg,#d4a017,#f5d060,#b8860b)' },
+    g24:       { type:'solid', color:'linear-gradient(135deg,#c8930a,#fce47a,#a07000)' },
+    abshodeh:  { type:'solid', color:'linear-gradient(135deg,#d4a017,#f5d060,#b8860b)' },
+    xau:       { type:'solid', color:'linear-gradient(135deg,#c8930a,#fce47a,#a07000)' },
+    mithqal:   { type:'solid', color:'linear-gradient(135deg,#d4a017,#f5d060,#b8860b)' },
+    // نقره
+    xag:       { type:'solid', color:'linear-gradient(135deg,#8a9ba8,#d4dde6,#7a8d9a)' },
+    // سکه‌ها — طلایی گرم‌تر
+    sekkeh:    { type:'solid', color:'linear-gradient(135deg,#c89520,#f7e070,#9a7000)' },
+    bahar:     { type:'solid', color:'linear-gradient(135deg,#c89520,#f7e070,#9a7000)' },
+    nim:       { type:'solid', color:'linear-gradient(135deg,#c89520,#f7e070,#9a7000)' },
+    rob:       { type:'solid', color:'linear-gradient(135deg,#c89520,#f7e070,#9a7000)' },
+    gerami:    { type:'solid', color:'linear-gradient(135deg,#c89520,#f7e070,#9a7000)' },
+    // رمزارزها — رنگ برند
+    btc:   { type:'solid', color:'linear-gradient(135deg,#f7931a,#ffbe6e,#c0600a)' },
+    eth:   { type:'solid', color:'linear-gradient(135deg,#627eea,#a8b9ff,#3a56c8)' },
+    usdt:  { type:'solid', color:'linear-gradient(135deg,#26a17b,#72e0bd,#156e51)' },
+    usdc:  { type:'solid', color:'linear-gradient(135deg,#2775ca,#7ab8ff,#1550a0)' },
+    bnb:   { type:'solid', color:'linear-gradient(135deg,#f3ba2f,#fde58a,#c08a00)' },
+    xrp:   { type:'solid', color:'linear-gradient(135deg,#346aa9,#80b8f0,#1a4a80)' },
+    sol:   { type:'solid', color:'linear-gradient(135deg,#9945ff,#d09aff,#6010d0)' },
+    ada:   { type:'solid', color:'linear-gradient(135deg,#0033ad,#5599ff,#001880)' },
+    doge:  { type:'solid', color:'linear-gradient(135deg,#c2a633,#f5dd7e,#8a7000)' },
+    trx:   { type:'solid', color:'linear-gradient(135deg,#cc0000,#ff6666,#880000)' },
+    dot:   { type:'solid', color:'linear-gradient(135deg,#e6007a,#ff78c0,#a00050)' },
+    matic: { type:'solid', color:'linear-gradient(135deg,#8247e5,#c49bff,#5010b0)' },
+    shib:  { type:'solid', color:'linear-gradient(135deg,#e8492e,#ff9070,#b02010)' },
+    ltc:   { type:'solid', color:'linear-gradient(135deg,#bfbbbb,#eaeaea,#8a8888)' },
+    avax:  { type:'solid', color:'linear-gradient(135deg,#e84142,#ff8585,#b00000)' },
+    link:  { type:'solid', color:'linear-gradient(135deg,#2a5ada,#7aa0ff,#1030b0)' },
+    uni:   { type:'solid', color:'linear-gradient(135deg,#ff007a,#ff80bb,#c00050)' },
+    atom:  { type:'solid', color:'linear-gradient(135deg,#2e3148,#6e7acc,#0a0e2e)' },
+    etc:   { type:'solid', color:'linear-gradient(135deg,#328432,#80d080,#105010)' },
+    xlm:   { type:'solid', color:'linear-gradient(135deg,#000000,#666666,#222222)' },
+    bch:   { type:'solid', color:'linear-gradient(135deg,#4dbb5f,#90e8a0,#208030)' },
+    algo:  { type:'solid', color:'linear-gradient(135deg,#000000,#555555,#111111)' },
+    vet:   { type:'solid', color:'linear-gradient(135deg,#15bdff,#80e0ff,#007fb0)' },
+    icp:   { type:'solid', color:'linear-gradient(135deg,#f15a24,#ffa070,#b03000)' },
+    fil:   { type:'solid', color:'linear-gradient(135deg,#0090ff,#70c8ff,#0050c0)' },
+    hbar:  { type:'solid', color:'linear-gradient(135deg,#222222,#666666,#000000)' },
+    egld:  { type:'solid', color:'linear-gradient(135deg,#23f7dd,#80ffe8,#00b0a0)' },
+    sand:  { type:'solid', color:'linear-gradient(135deg,#04adef,#70d8ff,#0070b0)' },
+    mana:  { type:'solid', color:'linear-gradient(135deg,#ff2d55,#ff80a0,#b00030)' },
+    axs:   { type:'solid', color:'linear-gradient(135deg,#1b6fff,#80b8ff,#0040c0)' },
+    theta: { type:'solid', color:'linear-gradient(135deg,#2ab8e6,#80d8f8,#0080b0)' },
+    xtz:   { type:'solid', color:'linear-gradient(135deg,#2c7df7,#80b8ff,#1050c0)' },
+    neo:   { type:'solid', color:'linear-gradient(135deg,#58bf00,#a8f060,#307000)' },
+    eos:   { type:'solid', color:'linear-gradient(135deg,#000000,#555555,#111111)' },
+    aave:  { type:'solid', color:'linear-gradient(135deg,#b6509e,#e8a0d8,#7a2070)' },
+    mkr:   { type:'solid', color:'linear-gradient(135deg,#1aaa8b,#70e0c8,#0a7060)' },
+    comp:  { type:'solid', color:'linear-gradient(135deg,#00d395,#70ffe0,#009060)' },
+    crv:   { type:'solid', color:'linear-gradient(135deg,#ff0420,#ff8090,#b00010)' },
+    snx:   { type:'solid', color:'linear-gradient(135deg,#00d1ff,#80eeff,#0090c0)' },
+    grt:   { type:'solid', color:'linear-gradient(135deg,#6747ed,#b098ff,#3010b0)' },
+    sushi: { type:'solid', color:'linear-gradient(135deg,#fa52a0,#ffaacc,#c01060)' },
+    zec:   { type:'solid', color:'linear-gradient(135deg,#f4b728,#fde080,#b07800)' },
+    dash:  { type:'solid', color:'linear-gradient(135deg,#008de4,#70c8ff,#0050a0)' },
+    bat:   { type:'solid', color:'linear-gradient(135deg,#ff5000,#ff9060,#b02000)' },
+    enj:   { type:'solid', color:'linear-gradient(135deg,#7866d5,#c0b0ff,#4030a0)' },
+    chz:   { type:'solid', color:'linear-gradient(135deg,#cd0124,#ff6070,#880010)' },
+    hot:   { type:'solid', color:'linear-gradient(135deg,#a74f9b,#e098d8,#702068)' },
+    xem:   { type:'solid', color:'linear-gradient(135deg,#67b2e8,#b0d8ff,#3080c0)' },
+    zil:   { type:'solid', color:'linear-gradient(135deg,#49c1bf,#90e8e8,#208080)' },
+    waves: { type:'solid', color:'linear-gradient(135deg,#0055ff,#70a0ff,#0030c0)' },
+    ont:   { type:'solid', color:'linear-gradient(135deg,#32a4be,#80d0e8,#1070a0)' },
+    qtum:  { type:'solid', color:'linear-gradient(135deg,#2b95d7,#80c8f8,#0060a0)' },
+    icx:   { type:'solid', color:'linear-gradient(135deg,#00b8cc,#70e8f8,#007090)' },
+    lrc:   { type:'solid', color:'linear-gradient(135deg,#1c60ff,#80a8ff,#0030d0)' },
+    near:  { type:'solid', color:'linear-gradient(135deg,#000000,#555555,#111111)' },
+    ftm:   { type:'solid', color:'linear-gradient(135deg,#1969ff,#80a8ff,#0040d0)' },
+    one:   { type:'solid', color:'linear-gradient(135deg,#00aee9,#70d8ff,#0070b0)' },
+    celo:  { type:'solid', color:'linear-gradient(135deg,#fcff52,#feffb0,#c0c000)' },
+    flow:  { type:'solid', color:'linear-gradient(135deg,#00ef8b,#80ffe0,#00a050)' },
+    ar:    { type:'solid', color:'linear-gradient(135deg,#222222,#666666,#000000)' },
+    kava:  { type:'solid', color:'linear-gradient(135deg,#ff564f,#ff9090,#c01010)' },
+    ksm:   { type:'solid', color:'linear-gradient(135deg,#000000,#666666,#222222)' },
+    tfuel: { type:'solid', color:'linear-gradient(135deg,#2ab8e6,#80d8f8,#0080b0)' },
+    rvn:   { type:'solid', color:'linear-gradient(135deg,#384182,#7888cc,#101840)' },
+    sc:    { type:'solid', color:'linear-gradient(135deg,#1ed660,#80f0a0,#0c9030)' },
+    dcr:   { type:'solid', color:'linear-gradient(135deg,#2ed8a3,#80ffe0,#109070)' },
+    nano:  { type:'solid', color:'linear-gradient(135deg,#4a90e2,#90c8ff,#1050c0)' },
+    lsk:   { type:'solid', color:'linear-gradient(135deg,#0d4ea6,#6090e8,#082880)' },
+    stx:   { type:'solid', color:'linear-gradient(135deg,#5546ff,#a098ff,#2010d0)' },
+    iost:  { type:'solid', color:'linear-gradient(135deg,#0a0f0f,#555555,#111111)' },
+    celr:  { type:'solid', color:'linear-gradient(135deg,#000000,#555555,#111111)' },
+    storj: { type:'solid', color:'linear-gradient(135deg,#2683ff,#80b8ff,#1040d0)' },
+    ankr:  { type:'solid', color:'linear-gradient(135deg,#2e6bf6,#80b0ff,#1040c0)' },
+    ocean: { type:'solid', color:'linear-gradient(135deg,#141414,#444488,#060620)' },
+    ren:   { type:'solid', color:'linear-gradient(135deg,#001c3d,#3366aa,#000e20)' },
+    band:  { type:'solid', color:'linear-gradient(135deg,#4520ca,#9070ff,#200080)' },
+    pax:   { type:'solid', color:'linear-gradient(135deg,#018f6e,#60e0b8,#005040)' },
+    busd:  { type:'solid', color:'linear-gradient(135deg,#f3ba2f,#fde58a,#c08a00)' },
+    dai:   { type:'solid', color:'linear-gradient(135deg,#f5ac37,#fad880,#c07000)' },
+    tusd:  { type:'solid', color:'linear-gradient(135deg,#002868,#5588cc,#001040)' },
+    ton:   { type:'solid', color:'linear-gradient(135deg,#0088cc,#70c8ff,#005090)' },
+    pepe:  { type:'solid', color:'linear-gradient(135deg,#3c9900,#88e040,#205000)' },
+    wbt:   { type:'solid', color:'linear-gradient(135deg,#1a4aff,#80a8ff,#0020c0)' },
+  };
+
+  /* ===================== TRANSLATIONS ===================== */
+  var TRANSLATIONS = {
+    fa: {
+      pageTitle:'داشبورد قیمت', dashTitle:'داشبورد قیمت',
+      introWelcome:'خوش آمدید', introTitle:'داشبورد قیمت',
+      connecting:'در حال اتصال', updated:'به‌روزرسانی شد · ',
+      error:'خطا در اتصال — در حال تلاش مجدد...',
+      searchPlaceholder:'جست‌وجو', noResult:'موردی یافت نشد',
+      toman:'تومان', perGram:'هر گرم', perUnit:'هر عدد',
+      sec_forex:'ارزهای خارجی', sec_gold:'طلا و سکه', sec_crypto:'رمزارزها',
+      items:{
+        usd:'دلار آمریکا',eur:'یورو',gbp:'پوند انگلیس',aed:'درهم امارات',
+        try:'لیر ترکیه',cny:'یوان چین',jpy:'ین ژاپن',cad:'دلار کانادا',
+        aud:'دلار استرالیا',chf:'فرانک سوئیس',sar:'ریال عربستان',
+        rub:'روبل روسیه',inr:'روپیه هند',afn:'افغانی',iqd:'دینار عراق',
+        syp:'لیره سوریه',kwd:'دینار کویت',bhd:'دینار بحرین',omr:'ریال عمان',
+        qar:'ریال قطر',hkd:'دلار هنگ‌کنگ',sgd:'دلار سنگاپور',
+        nzd:'دلار نیوزیلند',sek:'کرون سوئد',nok:'کرون نروژ',
+        dkk:'کرون دانمارک',myr:'رینگیت مالزی',krw:'وون کره جنوبی',
+        thb:'بات تایلند',pln:'زلوتی لهستان',czk:'کرون چک',
+        huf:'فورینت مجارستان',brl:'رئال برزیل',mxn:'پزو مکزیک',
+        zar:'رند آفریقای جنوبی',pkr:'روپیه پاکستان',idr:'روپیه اندونزی',
+        g18:'طلای ۱۸ عیار',g24:'طلای ۲۴ عیار',abshodeh:'طلای آبشده',
+        xau:'اونس طلا',xag:'اونس نقره',sekkeh:'سکه امامی',
+        bahar:'سکه تمام بهار',nim:'نیم سکه',rob:'ربع سکه',
+        gerami:'سکه گرمی',mithqal:'مثقال طلا',
+        btc:'بیت‌کوین',eth:'اتریوم',usdt:'تتر (USDT)',usdc:'یو‌اس‌دی کوین',
+        bnb:'بایننس کوین',xrp:'ریپل',sol:'سولانا',ada:'کاردانو',
+        doge:'دوج‌کوین',trx:'ترون',dot:'پولکادات',matic:'پالیگان',
+        shib:'شیبا اینو',ltc:'لایت‌کوین',avax:'اولانچ',link:'چین‌لینک',
+        uni:'یونی‌سواپ',atom:'کاسموس',etc:'اتریوم کلاسیک',xlm:'استلار',
+        bch:'بیت‌کوین کش',algo:'الگوراند',vet:'وی‌چین',icp:'اینترنت کامپیوتر',
+        fil:'فایل‌کوین',hbar:'هدراهش‌گراف',egld:'مولتی‌ورس‌ایکس',
+        sand:'سند‌باکس',mana:'دسنترالند',axs:'اکسی اینفینیتی',
+        theta:'تتا',xtz:'تزوس',neo:'نئو',eos:'ای‌اواس',aave:'آوه',
+        mkr:'میکر',comp:'کامپاند',crv:'کرو فایننس',snx:'سینتتیکس',
+        grt:'گراف',sushi:'سوشی‌سواپ',zec:'زی‌کش',dash:'دش',
+        bat:'بیسیک اتنشن توکن',enj:'انجین کوین',chz:'چیلیز',hot:'هولو',
+        xem:'نم',zil:'زیلیقا',waves:'ویوز',ont:'انتالوژی',qtum:'کوانتوم',
+        icx:'آیکون',lrc:'لوپرینگ',near:'نیر پروتکل',ftm:'فانتوم',
+        one:'هارمونی',celo:'سلو',flow:'فلو',ar:'آروی‌ایو',kava:'کاوا',
+        ksm:'کوساما',tfuel:'تتا فیول',rvn:'رون‌کوین',sc:'سیاکوین',
+        dcr:'دیکرد',nano:'نانو',lsk:'لیسک',stx:'استکس',iost:'آیوست',
+        celr:'سلر نتورک',storj:'استورج',ankr:'انکر',ocean:'اوشن پروتکل',
+        ren:'رن',band:'بندپروتکل',pax:'پکس',busd:'بایننس یو‌اس‌دی',
+        dai:'دای',tusd:'تراواو یو‌اس‌دی',ton:'تانکوین (TON)',pepe:'پپه',
+        wbt:'وایت‌بیت توکن'
+      }
+    },
+    en: {
+      pageTitle:'Price Dashboard', dashTitle:'Price Dashboard',
+      introWelcome:'Welcome to', introTitle:'Price Dashboard',
+      connecting:'Connecting', updated:'Updated · ',
+      error:'Connection error — retrying...',
+      searchPlaceholder:'Search', noResult:'No results found',
+      toman:'Toman', perGram:'per gram', perUnit:'per unit',
+      sec_forex:'Foreign Currencies', sec_gold:'Gold & Coins', sec_crypto:'Cryptocurrencies',
+      items:{
+        usd:'US Dollar',eur:'Euro',gbp:'British Pound',aed:'UAE Dirham',
+        try:'Turkish Lira',cny:'Chinese Yuan',jpy:'Japanese Yen',
+        cad:'Canadian Dollar',aud:'Australian Dollar',chf:'Swiss Franc',
+        sar:'Saudi Riyal',rub:'Russian Ruble',inr:'Indian Rupee',
+        afn:'Afghan Afghani',iqd:'Iraqi Dinar',syp:'Syrian Pound',
+        kwd:'Kuwaiti Dinar',bhd:'Bahraini Dinar',omr:'Omani Rial',
+        qar:'Qatari Riyal',hkd:'Hong Kong Dollar',sgd:'Singapore Dollar',
+        nzd:'New Zealand Dollar',sek:'Swedish Krona',nok:'Norwegian Krone',
+        dkk:'Danish Krone',myr:'Malaysian Ringgit',krw:'South Korean Won',
+        thb:'Thai Baht',pln:'Polish Zloty',czk:'Czech Koruna',
+        huf:'Hungarian Forint',brl:'Brazilian Real',mxn:'Mexican Peso',
+        zar:'South African Rand',pkr:'Pakistani Rupee',idr:'Indonesian Rupiah',
+        g18:'18K Gold',g24:'24K Gold',abshodeh:'Melted Gold',
+        xau:'Gold Ounce',xag:'Silver Ounce',sekkeh:'Emami Coin',
+        bahar:'Full Bahar Coin',nim:'Half Coin',rob:'Quarter Coin',
+        gerami:'Gram Coin',mithqal:'Gold Mithqal',
+        btc:'Bitcoin',eth:'Ethereum',usdt:'Tether (USDT)',usdc:'USD Coin',
+        bnb:'BNB',xrp:'XRP',sol:'Solana',ada:'Cardano',
+        doge:'Dogecoin',trx:'TRON',dot:'Polkadot',matic:'Polygon',
+        shib:'Shiba Inu',ltc:'Litecoin',avax:'Avalanche',link:'Chainlink',
+        uni:'Uniswap',atom:'Cosmos',etc:'Ethereum Classic',xlm:'Stellar',
+        bch:'Bitcoin Cash',algo:'Algorand',vet:'VeChain',
+        icp:'Internet Computer',fil:'Filecoin',hbar:'Hedera',
+        egld:'MultiversX',sand:'The Sandbox',mana:'Decentraland',
+        axs:'Axie Infinity',theta:'Theta',xtz:'Tezos',neo:'NEO',
+        eos:'EOS',aave:'Aave',mkr:'Maker',comp:'Compound',
+        crv:'Curve Finance',snx:'Synthetix',grt:'The Graph',
+        sushi:'SushiSwap',zec:'Zcash',dash:'Dash',
+        bat:'Basic Attention Token',enj:'Enjin Coin',chz:'Chiliz',
+        hot:'Holo',xem:'NEM',zil:'Zilliqa',waves:'Waves',
+        ont:'Ontology',qtum:'Qtum',icx:'ICON',lrc:'Loopring',
+        near:'NEAR Protocol',ftm:'Fantom',one:'Harmony',celo:'Celo',
+        flow:'Flow',ar:'Arweave',kava:'Kava',ksm:'Kusama',
+        tfuel:'Theta Fuel',rvn:'Ravencoin',sc:'Siacoin',dcr:'Decred',
+        nano:'Nano',lsk:'Lisk',stx:'Stacks',iost:'IOST',
+        celr:'Celer Network',storj:'Storj',ankr:'Ankr',
+        ocean:'Ocean Protocol',ren:'Ren',band:'Band Protocol',
+        pax:'Pax Dollar',busd:'Binance USD',dai:'Dai',
+        tusd:'TrueUSD',ton:'Toncoin (TON)',pepe:'Pepe',
+        wbt:'WhiteBIT Token'
+      }
+    }
+  };
+
+  /* ==================== WATCHLIST ==================== */
+  var WATCHLIST = [
+    {id:"_sec_forex",section:true},
+    {id:"usd",unit:"toman",keys:["usd"]},{id:"eur",unit:"toman",keys:["eur"]},
+    {id:"gbp",unit:"toman",keys:["gbp"]},{id:"aed",unit:"toman",keys:["aed"]},
+    {id:"try",unit:"toman",keys:["try"]},{id:"cny",unit:"toman",keys:["cny"]},
+    {id:"jpy",unit:"toman",keys:["jpy"]},{id:"cad",unit:"toman",keys:["cad"]},
+    {id:"aud",unit:"toman",keys:["aud"]},{id:"chf",unit:"toman",keys:["chf"]},
+    {id:"sar",unit:"toman",keys:["sar"]},{id:"rub",unit:"toman",keys:["rub"]},
+    {id:"inr",unit:"toman",keys:["inr"]},{id:"afn",unit:"toman",keys:["afn"]},
+    {id:"iqd",unit:"toman",keys:["iqd"]},{id:"syp",unit:"toman",keys:["syp"]},
+    {id:"kwd",unit:"toman",keys:["kwd"]},{id:"bhd",unit:"toman",keys:["bhd"]},
+    {id:"omr",unit:"toman",keys:["omr"]},{id:"qar",unit:"toman",keys:["qar"]},
+    {id:"hkd",unit:"toman",keys:["hkd"]},{id:"sgd",unit:"toman",keys:["sgd"]},
+    {id:"nzd",unit:"toman",keys:["nzd"]},{id:"sek",unit:"toman",keys:["sek"]},
+    {id:"nok",unit:"toman",keys:["nok"]},{id:"dkk",unit:"toman",keys:["dkk"]},
+    {id:"myr",unit:"toman",keys:["myr"]},{id:"krw",unit:"toman",keys:["krw"]},
+    {id:"thb",unit:"toman",keys:["thb"]},{id:"pln",unit:"toman",keys:["pln"]},
+    {id:"czk",unit:"toman",keys:["czk"]},{id:"huf",unit:"toman",keys:["huf"]},
+    {id:"brl",unit:"toman",keys:["brl"]},{id:"mxn",unit:"toman",keys:["mxn"]},
+    {id:"zar",unit:"toman",keys:["zar"]},{id:"pkr",unit:"toman",keys:["pkr"]},
+    {id:"idr",unit:"toman",keys:["idr"]},
+    {id:"_sec_gold",section:true},
+    {id:"g18",unit:"gram",keys:["18ayar"]},{id:"g24",unit:"gram",keys:["24ayar"]},
+    {id:"abshodeh",unit:"gram",keys:["abshodeh"]},{id:"xau",unit:"toman",keys:["xau"]},
+    {id:"xag",unit:"toman",keys:["xag"]},{id:"sekkeh",unit:"unit",keys:["sekkeh"]},
+    {id:"bahar",unit:"unit",keys:["bahar"]},{id:"nim",unit:"unit",keys:["nim"]},
+    {id:"rob",unit:"unit",keys:["rob"]},{id:"gerami",unit:"unit",keys:["gerami"]},
+    {id:"mithqal",unit:"toman",keys:["mithqal"]},
+    {id:"_sec_crypto",section:true},
+    {id:"btc",unit:"toman",keys:["btc"]},{id:"eth",unit:"toman",keys:["eth"]},
+    {id:"usdt",unit:"toman",keys:["usdt"]},{id:"usdc",unit:"toman",keys:["usdc"]},
+    {id:"bnb",unit:"toman",keys:["bnb"]},{id:"xrp",unit:"toman",keys:["xrp"]},
+    {id:"sol",unit:"toman",keys:["sol"]},{id:"ada",unit:"toman",keys:["ada"]},
+    {id:"doge",unit:"toman",keys:["doge"]},{id:"trx",unit:"toman",keys:["trx"]},
+    {id:"dot",unit:"toman",keys:["dot"]},{id:"matic",unit:"toman",keys:["matic","pol"]},
+    {id:"shib",unit:"toman",keys:["shib"]},{id:"ltc",unit:"toman",keys:["ltc"]},
+    {id:"avax",unit:"toman",keys:["avax"]},{id:"link",unit:"toman",keys:["link"]},
+    {id:"uni",unit:"toman",keys:["uni"]},{id:"atom",unit:"toman",keys:["atom"]},
+    {id:"etc",unit:"toman",keys:["etc"]},{id:"xlm",unit:"toman",keys:["xlm"]},
+    {id:"bch",unit:"toman",keys:["bch"]},{id:"algo",unit:"toman",keys:["algo"]},
+    {id:"vet",unit:"toman",keys:["vet"]},{id:"icp",unit:"toman",keys:["icp"]},
+    {id:"fil",unit:"toman",keys:["fil"]},{id:"hbar",unit:"toman",keys:["hbar"]},
+    {id:"egld",unit:"toman",keys:["egld"]},{id:"sand",unit:"toman",keys:["sand"]},
+    {id:"mana",unit:"toman",keys:["mana"]},{id:"axs",unit:"toman",keys:["axs"]},
+    {id:"theta",unit:"toman",keys:["theta"]},{id:"xtz",unit:"toman",keys:["xtz"]},
+    {id:"neo",unit:"toman",keys:["neo"]},{id:"eos",unit:"toman",keys:["eos"]},
+    {id:"aave",unit:"toman",keys:["aave"]},{id:"mkr",unit:"toman",keys:["mkr"]},
+    {id:"comp",unit:"toman",keys:["comp"]},{id:"crv",unit:"toman",keys:["crv"]},
+    {id:"snx",unit:"toman",keys:["snx"]},{id:"grt",unit:"toman",keys:["grt"]},
+    {id:"sushi",unit:"toman",keys:["sushi"]},{id:"zec",unit:"toman",keys:["zec"]},
+    {id:"dash",unit:"toman",keys:["dash"]},{id:"bat",unit:"toman",keys:["bat"]},
+    {id:"enj",unit:"toman",keys:["enj"]},{id:"chz",unit:"toman",keys:["chz"]},
+    {id:"hot",unit:"toman",keys:["hot"]},{id:"xem",unit:"toman",keys:["xem"]},
+    {id:"zil",unit:"toman",keys:["zil"]},{id:"waves",unit:"toman",keys:["waves"]},
+    {id:"ont",unit:"toman",keys:["ont"]},{id:"qtum",unit:"toman",keys:["qtum"]},
+    {id:"icx",unit:"toman",keys:["icx"]},{id:"lrc",unit:"toman",keys:["lrc"]},
+    {id:"near",unit:"toman",keys:["near"]},{id:"ftm",unit:"toman",keys:["ftm"]},
+    {id:"one",unit:"toman",keys:["one"]},{id:"celo",unit:"toman",keys:["celo"]},
+    {id:"flow",unit:"toman",keys:["flow"]},{id:"ar",unit:"toman",keys:["ar"]},
+    {id:"kava",unit:"toman",keys:["kava"]},{id:"ksm",unit:"toman",keys:["ksm"]},
+    {id:"tfuel",unit:"toman",keys:["tfuel"]},{id:"rvn",unit:"toman",keys:["rvn"]},
+    {id:"sc",unit:"toman",keys:["sc"]},{id:"dcr",unit:"toman",keys:["dcr"]},
+    {id:"nano",unit:"toman",keys:["nano"]},{id:"lsk",unit:"toman",keys:["lsk"]},
+    {id:"stx",unit:"toman",keys:["stx"]},{id:"iost",unit:"toman",keys:["iost"]},
+    {id:"celr",unit:"toman",keys:["celr"]},{id:"storj",unit:"toman",keys:["storj"]},
+    {id:"ankr",unit:"toman",keys:["ankr"]},{id:"ocean",unit:"toman",keys:["ocean"]},
+    {id:"ren",unit:"toman",keys:["ren"]},{id:"band",unit:"toman",keys:["band"]},
+    {id:"pax",unit:"toman",keys:["pax"]},{id:"busd",unit:"toman",keys:["busd"]},
+    {id:"dai",unit:"toman",keys:["dai"]},{id:"tusd",unit:"toman",keys:["tusd"]},
+    {id:"ton",unit:"toman",keys:["ton"]},{id:"pepe",unit:"toman",keys:["pepe"]},
+    {id:"wbt",unit:"toman",keys:["wbt"]},
+  ];
+
+  /* ==================== DOM refs ==================== */
+  var langScreen   = document.getElementById('langScreen');
+  var introScreen  = document.getElementById('introScreen');
+  var introContent = document.getElementById('introContent');
+  var introWelcome = document.getElementById('introWelcome');
+  var introTitle   = document.getElementById('introTitle');
+  var mainApp      = document.getElementById('mainApp');
+  var dashboardTitle = document.getElementById('dashboardTitle');
+  var emptyState   = document.getElementById('emptyState');
+  var searchInput  = document.getElementById('searchInput');
+  var searchBar    = document.getElementById('searchBar');
+  var bottomWrapper= document.getElementById('bottomWrapper');
+  var statusBar    = document.getElementById('statusBar');
+  var grid         = document.getElementById('priceGrid');
+
+  var savedLang    = localStorage.getItem('pd_lang');
+  var currentLang  = savedLang || 'fa';
+  var firstFetchDone = false;
+  var cardEls = {};
+  var currentGrid = null;
+
+  /* ---------- build card background HTML ---------- */
+  function buildCardBgHtml(id) {
+    var bg = CARD_BG[id];
+    if (!bg) return '';
+    if (bg.type === 'flag' && bg.code) {
+      var url = 'https://flagcdn.com/w160/' + bg.code + '.png';
+      var fallbackCss = bg.css ? bg.css.replace(/"/g,'&quot;') : '';
+      var onerrorHandler = fallbackCss
+        ? 'this.style.display=\'none\';var d=this.nextElementSibling;d.style.background=\''+fallbackCss+'\';'
+        : 'this.style.display=\'none\';';
+      return '<div class="card-bg" aria-hidden="true">' +
+               '<img class="card-bg-flag-img" src="' + url + '" alt=""' +
+                 ' onerror="' + onerrorHandler + '">' +
+               '<div class="card-bg-flag"></div>' +
+               '<div class="card-bg-overlay"></div>' +
+             '</div>';
+    }
+    if (bg.type === 'flag' && bg.css) {
+      return '<div class="card-bg" aria-hidden="true">' +
+               '<div class="card-bg-solid" style="background:' + bg.css + '"></div>' +
+               '<div class="card-bg-overlay"></div>' +
+             '</div>';
+    }
+    if (bg.type === 'solid') {
+      return '<div class="card-bg" aria-hidden="true">' +
+               '<div class="card-bg-solid" style="background:' + bg.color + '"></div>' +
+               '<div class="card-bg-overlay"></div>' +
+             '</div>';
+    }
+    return '';
+  }
+
+  /* ---------- build cards ---------- */
+  WATCHLIST.forEach(function(item){
+    if (item.section) {
+      var sectionKey = item.id.replace('_sec_','');
+      var label = document.createElement('div');
+      label.className = 'section-label';
+      label.dataset.sectionId = item.id;
+      var initL = localStorage.getItem('pd_lang') || 'fa';
+      label.textContent = TRANSLATIONS[initL]['sec_'+sectionKey] || sectionKey;
+      grid.appendChild(label);
+      currentGrid = document.createElement('div');
+      currentGrid.className = 'grid';
+      currentGrid.dataset.sectionGrid = item.id;
+      grid.appendChild(currentGrid);
+      return;
+    }
+
+    var initL2 = localStorage.getItem('pd_lang') || 'fa';
+    var t0 = TRANSLATIONS[initL2];
+    var labelText = t0.items[item.id] || item.id;
+    var unitType  = item.unit;
+    var unitText  = unitType==='gram' ? t0.perGram : unitType==='unit' ? t0.perUnit : t0.toman;
+
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = item.id;
+    card.dataset.label = labelText.toLowerCase();
+    card.dataset.unitType = unitType;
+    card.innerHTML =
+      buildCardBgHtml(item.id) +
+      '<div class="card-top">' +
+        '<div class="card-name" data-role="name">' + labelText + '</div>' +
+        '<div class="card-badge badge-flat" data-role="badge">--</div>' +
+      '</div>' +
+      '<div class="card-price" data-role="price">—</div>' +
+      '<div class="card-unit" data-role="unit">' + unitText + '</div>';
+    (currentGrid || grid).appendChild(card);
+    cardEls[item.id] = card;
+  });
+
+  /* ---------- applyLang ---------- */
+  function applyLang(lang) {
+    var t = TRANSLATIONS[lang];
+    var isRtl = lang === 'fa';
+    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
+    document.title = t.pageTitle;
+    if (dashboardTitle) dashboardTitle.textContent = t.dashTitle;
+    if (emptyState)     emptyState.textContent     = t.noResult;
+    if (searchInput)    searchInput.placeholder    = t.searchPlaceholder;
+
+    document.querySelectorAll('[data-section-id]').forEach(function(el){
+      var sid = el.dataset.sectionId;
+      var key = 'sec_' + sid.replace('_sec_','');
+      if (t[key]) el.textContent = t[key];
+    });
+
+    Object.keys(cardEls).forEach(function(id){
+      var card = cardEls[id];
+      var nameEl = card.querySelector('[data-role="name"]');
+      var unitEl = card.querySelector('[data-role="unit"]');
+      if (nameEl && t.items[id]) nameEl.textContent = t.items[id];
+      if (unitEl) {
+        var ut = card.dataset.unitType;
+        unitEl.textContent = ut==='gram' ? t.perGram : ut==='unit' ? t.perUnit : t.toman;
+      }
+      if (t.items[id]) card.dataset.label = t.items[id].toLowerCase();
+    });
+
+    if (!firstFetchDone) {
+      statusBar.innerHTML = t.connecting + ' <span class="status-dot"></span>';
+    }
+  }
+
+  /* ---------- intro ---------- */
+  function showIntro(lang, callback){
+    var t = TRANSLATIONS[lang];
+    introWelcome.textContent = t.introWelcome;
+    introTitle.textContent   = t.introTitle;
+    lang==='fa' ? introTitle.classList.add('fa') : introTitle.classList.remove('fa');
+    introScreen.classList.remove('hidden-overlay');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ introContent.classList.add('visible'); });
+    });
+    setTimeout(function(){
+      introScreen.classList.add('hidden-overlay');
+      mainApp.style.display = '';
+      setTimeout(function(){
+        introScreen.style.display = 'none';
+        applyLang(lang);
+        if (callback) callback();
+      }, 480);
+    }, 1600);
+  }
+
+  function pickLang(lang){
+    currentLang = lang;
+    localStorage.setItem('pd_lang', lang);
+    langScreen.classList.add('hidden-overlay');
+    setTimeout(function(){
+      langScreen.style.display = 'none';
+      showIntro(lang, null);
+    }, 450);
+  }
+
+  document.getElementById('btnFa').addEventListener('click', function(){ pickLang('fa'); });
+  document.getElementById('btnEn').addEventListener('click', function(){ pickLang('en'); });
+
+  if (savedLang) {
+    currentLang = savedLang;
+    langScreen.style.display = 'none';
+    showIntro(savedLang, null);
+  } else {
+    mainApp.style.display = 'none';
+  }
+
+  /* ==================== API ==================== */
+  var API_KEY = "freeOVcUxPkOdrCzqfhPWBceNLS9Psq3";
+  var NAVASAN_URL = "https://api.navasan.tech/latest/?api_key=" + API_KEY;
+  var CORS_PROXIES = [
+    function(u){ return "https://api.allorigins.win/raw?url=" + encodeURIComponent(u); },
+    function(u){ return "https://api.codetabs.com/v1/proxy/?quest=" + encodeURIComponent(u); },
+    function(u){ return "https://corsproxy.io/?url=" + encodeURIComponent(u); }
+  ];
+  var REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+  var PROXY_TIMEOUT_MS    = 8000;
+
+  function formatNumber(n){
+    if (n===null||n===undefined||n===''||isNaN(n)) return null;
+    return Number(n).toLocaleString('en-US');
+  }
+
+  function getApiItem(data, watchItem){
+    for (var i=0;i<watchItem.keys.length;i++){
+      var k = watchItem.keys[i];
+      if (data && Object.prototype.hasOwnProperty.call(data,k) && data[k]) return data[k];
+    }
+    return null;
+  }
+
+  function updateCard(watchItem, apiItem){
+    var card = cardEls[watchItem.id];
+    if (!card) return;
+    var priceEl = card.querySelector('[data-role="price"]');
+    var badgeEl = card.querySelector('[data-role="badge"]');
+    var rawPrice = apiItem ? apiItem.value : null;
+    var formattedPrice = formatNumber(rawPrice);
+    var changePercent = apiItem ? (apiItem.change_pct!==undefined ? apiItem.change_pct : apiItem.change) : null;
+
+    if (!formattedPrice){ card.classList.add('no-price'); return; }
+    card.classList.remove('no-price');
+    priceEl.textContent = formattedPrice;
+
+    if (changePercent===null||changePercent===undefined||changePercent===''||isNaN(changePercent)){
+      badgeEl.className='card-badge badge-flat'; badgeEl.textContent='--';
+    } else {
+      var cp = Number(changePercent);
+      if (cp>0){ badgeEl.className='card-badge badge-up'; badgeEl.textContent='+'+cp.toFixed(2)+'%'; }
+      else if (cp<0){ badgeEl.className='card-badge badge-down'; badgeEl.textContent=cp.toFixed(2)+'%'; }
+      else { badgeEl.className='card-badge badge-flat'; badgeEl.textContent='0.00%'; }
+    }
+  }
+
+  function hideEmptySections(){
+    document.querySelectorAll('[data-section-grid]').forEach(function(sGrid){
+      var sid = sGrid.dataset.sectionGrid;
+      var hasVisible = sGrid.querySelector('.card:not(.hidden):not(.no-price)');
+      var labelEl = document.querySelector('[data-section-id="'+sid+'"]');
+      if (labelEl) labelEl.style.display = hasVisible ? '' : 'none';
+      sGrid.style.display = hasVisible ? '' : 'none';
+    });
+  }
+
+  async function fetchWithTimeout(url, ms){
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, ms);
+    try {
+      var res = await fetch(url, {cache:'no-store', signal:controller.signal});
+      return res;
+    } finally { clearTimeout(timer); }
+  }
+
+  async function fetchPrices(){
+    var errors = [];
+    for (var i=0;i<CORS_PROXIES.length;i++){
+      var proxyUrl = CORS_PROXIES[i](NAVASAN_URL);
+      try {
+        var res = await fetchWithTimeout(proxyUrl, PROXY_TIMEOUT_MS);
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        var data = await res.json();
+        if (data && data.error) throw new Error('API error: '+data.error);
+        WATCHLIST.forEach(function(watchItem){
+          if (watchItem.section) return;
+          updateCard(watchItem, getApiItem(data, watchItem));
+        });
+        firstFetchDone = true;
+        hideEmptySections();
+        var t = TRANSLATIONS[currentLang];
+        var timeStr = new Date().toLocaleTimeString(currentLang==='fa'?'fa-IR':'en-US');
+        statusBar.innerHTML = t.updated + timeStr + ' <span class="status-dot live"></span>';
+        return;
+      } catch(err){
+        errors.push(err&&err.name==='AbortError'?'timeout':err.message);
+        console.error('Proxy #'+(i+1)+' failed:',err);
+      }
+    }
+    var t = TRANSLATIONS[currentLang];
+    statusBar.innerHTML = t.error + ' <span class="status-dot"></span>';
+    console.error('All proxies failed:', errors.join(' | '));
+  }
+
+  fetchPrices();
+  setInterval(fetchPrices, REFRESH_INTERVAL_MS);
+
+  /* ==================== Search ==================== */
+  searchInput.addEventListener('input', function(){
+    var query = searchInput.value.trim().toLowerCase();
+    var visibleCount = 0;
+    Object.keys(cardEls).forEach(function(id){
+      var card = cardEls[id];
+      if (card.classList.contains('no-price')) return;
+      var matches = query==='' || card.dataset.label.indexOf(query)!==-1;
+      card.classList.toggle('hidden', !matches);
+      if (matches) visibleCount++;
+    });
+    hideEmptySections();
+    emptyState.textContent = TRANSLATIONS[currentLang].noResult;
+    emptyState.style.display = visibleCount===0 ? 'block' : 'none';
+  });
+
+  function focusSearch(){
+    searchInput.focus();
+    searchBar.classList.add('focused');
+  }
+
+  searchBar.addEventListener('click', function(){ focusSearch(); });
+  searchInput.addEventListener('focus', function(){ searchBar.classList.add('focused'); });
+  searchInput.addEventListener('blur', function(){ searchBar.classList.remove('focused'); });
+
+  // موبایل: انیمیشن press + باز کردن کیبورد
+  searchBar.addEventListener('touchstart', function(){
+    searchBar.classList.add('pressing');
+  }, {passive:true});
+
+  searchBar.addEventListener('touchend', function(e){
+    searchBar.classList.remove('pressing');
+    // setTimeout صفر ضروری است تا پس از پایان چرخه touch، keyboard باز شود
+    setTimeout(function(){ focusSearch(); }, 0);
+  }, {passive:true});
+
+  searchBar.addEventListener('mousedown', function(){ searchBar.classList.add('pressing'); });
+  searchBar.addEventListener('mouseup', function(){ searchBar.classList.remove('pressing'); });
+
+  /* ==================== Scroll hide/show ==================== */
+  var lastScrollY = window.scrollY;
+  var scrollDir = 'up';
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){
+        var currentY = window.scrollY;
+        var delta = currentY - lastScrollY;
+        if (currentY<=10){ scrollDir='up'; bottomWrapper.classList.remove('hidden-bar'); }
+        else if (delta>4){
+          if (scrollDir!=='down'){
+            scrollDir='down';
+            if (document.activeElement===searchInput) searchInput.blur();
+            bottomWrapper.classList.add('hidden-bar');
+          }
+        } else if (delta<-4){
+          if (scrollDir!=='up'){ scrollDir='up'; bottomWrapper.classList.remove('hidden-bar'); }
+        }
+        lastScrollY = currentY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, {passive:true});
+
+})();
+</script>
+</body>
+</html>
